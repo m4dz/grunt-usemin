@@ -39,6 +39,19 @@ describe('htmlprocessor', function () {
     assert.equal('', hp.blocks[0].indent);
   });
 
+  it('should detect jade comments', function () {
+    var htmlcontent = '// build:css foo.css\n' +
+    '<link rel="stylesheet" href="bar.css">\n\n' +
+    '<link rel="stylesheet" href="foo.css">\n' +
+    '// endbuild\n';
+    var hp = new HTMLProcessor('', '', htmlcontent, 3);
+    assert.equal(1, hp.blocks.length);
+    assert.equal('foo.css', hp.blocks[0].dest);
+    assert.equal(5, hp.blocks[0].raw.length);
+    assert.equal(2, hp.blocks[0].src.length);
+    assert.equal('', hp.blocks[0].indent);
+  });
+
   it('should return the correct indentation', function () {
     var htmlcontent = '  <!-- build:css foo.css -->\n' +
     '  <link rel="stylesheet" href="foo.css">\n' +
